@@ -5,9 +5,73 @@ const cloudRetry = $('cloud-retry');
 const cloudStatus = $('cloud-status');
 const cloudLayout = document.querySelector('.layout');
 const cloudConfig = window.ALS_CLOUD_CONFIG;
+const recoveryUrl = new URL(location.href);
+const recoveryHash = new URLSearchParams(recoveryUrl.hash.slice(1));
+let recoveryRequested = recoveryUrl.searchParams.has('recuperar') || recoveryHash.get('type') === 'recovery';
+let recoveryToken = recoveryHash.get('type') === 'recovery';
 const cloud = cloudConfig?.url && cloudConfig.publishableKey && window.supabase
   ? window.supabase.createClient(cloudConfig.url, cloudConfig.publishableKey)
   : null;
+
+const cloudTitle = $('cloud-title');
+cloudForm.insertAdjacentHTML('beforeend', '<p style="text-align:center;margin:16px 0 0"><a href="?recuperar=1" style="color:#ffafb2">Esqueci minha senha</a></p>');
+const loginFields = cloudForm.innerHTML;
+let authScreen = 'login';
+let recoverySession = false;
+
+cloud?.auth.onAuthStateChange(event => {
+  if (event === 'PASSWORD_RECOVERY') recoverySession = true;
+});
+
+function showAuthScreen(screen, message, email = '') {
+  authScreen = screen;
+  const request = screen === 'request';
+  const reset = screen === 'reset';
+  cloudTitle.textContent = request ? 'Recuperar senha' : reset ? 'Defina uma nova senha' : 'Acesse sua oficina';
+  cloudForm.innerHTML = request
+    ? `<div class="cloud-field">
+         <label for="recovery-email">E-mail da oficina</label>
+         <input id="recovery-email" name="email" type="email" autocomplete="email" required>
+       </div>
+       <p><button type="submit">Enviar link de recuperação</button></p>
+       <a href="#painel" style="color:#ffafb2">Voltar ao login</a>`
+    : reset
+      ? `<div class="cloud-field">
+           <label for="recovery-password">Nova senha</label>
+           <input id="recovery-password" name="password" type="password" autocomplete="new-password" minlength="6" required>
+         </div>
+         <div class="cloud-field">
+           <label for="confirm-password">Confirme a nova senha</label>
+           <input id="confirm-password" name="confirmation" type="password" autocomplete="new-password" minlength="6" required>
+         </div>
+         <p><button type="submit">Salvar nova senha</button></p>`
+      : loginFields;
+  if (request) $('recovery-email').value = email;
+  cloudGate(message, true);
+}
+
+function openAuthPanel() {
+  const url = new URL(location.href);
+  url.searchParams.delete('recuperar');
+  url.hash = 'painel';
+  history.replaceState(null, '', url);
+  syncIntro(true);
+}
+
+cloudForm.addEventListener('click', event => {
+  const link = event.target.closest('a');
+  if (!link || authScreen === 'reset') return;
+  event.preventDefault();
+  if (cloudForm.querySelector('button').disabled) return;
+  if (authScreen === 'login') {
+    const email = $('cloud-email').value;
+    showAuthScreen('request', 'Informe o e-mail que você usa para entrar.', email);
+    $('recovery-email').focus();
+  } else {
+    showAuthScreen('login', 'Entre com a conta da oficina para abrir os cadastros.');
+    $('cloud-email').focus();
+  }
+});
 
 let cloudOwner = null;
 let cloudRevision = null;
@@ -40,6 +104,15 @@ async function loadCloud() {
   }
   try {
     const { data: { session }, error } = await cloud.auth.getSession();
+    if (recoveryRequested || recoverySession) {
+      openAuthPanel();
+      if (!error && session && (recoverySession || recoveryToken)) {
+        showAuthScreen('reset', 'Escolha uma nova senha para sua conta.');
+      } else {
+        showAuthScreen('request', 'O link está inválido ou expirou. Solicite um novo.');
+      }
+      return;
+    }
     if (error) throw error;
     if (!session) {
       cloudGate('Entre com a conta da oficina para abrir os cadastros.', true);
@@ -132,8 +205,40 @@ cloudForm.addEventListener('submit', async event => {
   event.preventDefault();
   const form = new FormData(cloudForm);
   const submit = cloudForm.querySelector('button');
+  if (authScreen === 'reset' && form.get('password') !== form.get('confirmation')) {
+    cloudMessage.textContent = 'As senhas precisam ser iguais.';
+    $('confirm-password').focus();
+    return;
+  }
   submit.disabled = true;
   try {
+    if (authScreen === 'request') {
+      const redirect = new URL(location.pathname, location.origin);
+      redirect.searchParams.set('recuperar', '1');
+      const { error } = await cloud.auth.resetPasswordForEmail(form.get('email').trim(), {
+        redirectTo: redirect.href
+      });
+      cloudMessage.textContent = error
+        ? 'Não foi possível enviar o link agora. Tente novamente em alguns instantes.'
+        : 'Se o e-mail estiver cadastrado, você receberá um link. Confira também o spam.';
+      return;
+    }
+    if (authScreen === 'reset') {
+      const { error } = await cloud.auth.updateUser({ password: form.get('password') });
+      if (error) {
+        cloudMessage.textContent = error.code === 'same_password'
+          ? 'Escolha uma senha diferente da anterior.'
+          : 'Não foi possível salvar a senha. Confira os requisitos e tente novamente.';
+        return;
+      }
+      recoveryRequested = false;
+      recoveryToken = false;
+      recoverySession = false;
+      showAuthScreen('login', 'Senha atualizada.');
+      await loadCloud();
+      if (cloudPanel.hidden) cloudStatus.textContent = 'Senha atualizada · Dados salvos online';
+      return;
+    }
     const { error } = await cloud.auth.signInWithPassword({
       email: form.get('email'),
       password: form.get('password')
@@ -142,7 +247,9 @@ cloudForm.addEventListener('submit', async event => {
     cloudForm.reset();
     await loadCloud();
   } catch (error) {
-    cloudMessage.textContent = 'Não foi possível entrar. Confira a conta e a conexão.';
+    cloudMessage.textContent = authScreen === 'login'
+      ? 'Não foi possível entrar. Confira a conta e a conexão.'
+      : 'Confira sua conexão e tente novamente.';
   } finally {
     submit.disabled = false;
   }
