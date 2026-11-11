@@ -1,6 +1,6 @@
 begin;
 
-create table public.als_workspace (
+create table if not exists public.als_workspace (
   owner_id uuid primary key references auth.users(id) on delete cascade,
   revision uuid not null,
   records jsonb not null check (
@@ -17,6 +17,7 @@ alter table public.als_workspace enable row level security;
 revoke all on public.als_workspace from public, anon, authenticated;
 grant select, insert, update on public.als_workspace to authenticated;
 
+drop policy if exists "Conta ALS acessa seus próprios registros" on public.als_workspace;
 create policy "Conta ALS acessa seus próprios registros"
   on public.als_workspace to authenticated
   using ((select auth.uid()) = owner_id)
