@@ -114,6 +114,6 @@ for (const name of ['dashboard','financeiro','reportData']) {
  if(name==='dashboard')dashboard=wrapped;else if(name==='financeiro')financeiro=wrapped;else reportData=wrapped;
 }
 const modalWithLabels=openModal;openModal=function(kind,id){modalWithLabels(kind,id);document.querySelectorAll('#form input,#form select').forEach(el=>{const label=el.previousElementSibling;if(label?.tagName==='LABEL'){el.id='field-'+el.name;label.htmlFor=el.id}})};
-</script><link rel="stylesheet" href="refinements.css"><script src="refinements.js"></script><link rel="stylesheet" href="workshop.css"><script src="workshop.js"></script><script src="intro.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="cloud-config.js"></script><script src="cloud.js"></script></body></html>
+</script><link rel="stylesheet" href="refinements.css"><script src="refinements.js"></script><link rel="stylesheet" href="workshop.css"><script src="workshop.js"></script><script src="intro.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="cloud-config.js"></script><script src="cloud.js?v=655c3cb"></script></body></html>
 
 <!-- Publicação do ALS 4x4 -->
