@@ -15,7 +15,11 @@ const cloud = cloudConfig?.url && cloudConfig.publishableKey && window.supabase
   : null;
 
 const cloudTitle = $('cloud-title');
-cloudForm.insertAdjacentHTML('beforeend', '<p style="text-align:center;margin:16px 0 0"><a href="?recuperar=1" data-auth-screen="request" style="color:#ffafb2">Esqueci minha senha</a> · <a href="?criar=1" data-auth-screen="signup" style="color:#ffafb2">Criar conta</a></p>');
+cloudForm.insertAdjacentHTML('beforeend', `
+  <div class="cloud-auth-actions">
+    <a href="?criar=1" data-auth-screen="signup">Criar conta</a>
+    <a href="?recuperar=1" data-auth-screen="request">Esqueci minha senha</a>
+  </div>`);
 const loginFields = cloudForm.innerHTML;
 let authScreen = 'login';
 let recoverySession = false;
