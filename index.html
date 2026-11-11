@@ -24,18 +24,18 @@ aside{width:244px;background:#191919;box-shadow:none;padding:28px 18px}.brand{pa
 .layout.cloud-locked > aside,.layout.cloud-locked > main > header,.layout.cloud-locked #app{display:none}
 .layout.cloud-locked > main{padding:0;max-width:none;margin:0;width:100%}
 #cloud-panel[hidden],#cloud-login[hidden],#cloud-retry[hidden]{display:none}
-#cloud-panel{min-height:100vh;min-height:100svh;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);background:#191a18;color:#f6eee7}
-.cloud-brand{position:relative;display:grid;place-items:center;align-content:center;gap:18px;min-width:0;padding:72px 28px;background:radial-gradient(ellipse at center,#651e21 0%,#35181a 44%,#171515 82%);border-right:1px solid #603436;text-align:center}
-.cloud-brand img{width:clamp(122px,22vw,265px);height:auto;aspect-ratio:1;border-radius:50%;object-fit:contain;background:#141413;border:1px solid #a24849;padding:8px;box-shadow:0 22px 60px #10080b9e}
-.cloud-brand strong{font-size:clamp(26px,4vw,54px);line-height:1;font-weight:850;letter-spacing:-.045em}
+#cloud-panel{position:relative;box-sizing:border-box;min-height:100vh;min-height:100svh;display:grid;align-content:center;justify-items:center;gap:22px;padding:62px 18px 32px;background:linear-gradient(155deg,#861e29 0%,#4d2026 37%,#2b1d23 66%,#191a18 100%);color:#f6eee7}
+.cloud-brand{display:grid;justify-items:center;gap:8px;text-align:center}
+.cloud-brand img{width:clamp(88px,14vw,116px);height:auto;aspect-ratio:1;border-radius:50%;object-fit:contain;background:#141413;border:1px solid #c36568;padding:5px;box-shadow:0 12px 32px #10080b7a}
+.cloud-brand strong{font-size:clamp(27px,4vw,36px);line-height:1;font-weight:850;letter-spacing:-.045em}
 .cloud-brand strong span{color:#ff666b}
 .cloud-brand p{margin:0;color:#e7c3bd;font-size:14px}
 .cloud-back{position:absolute;top:24px;left:clamp(20px,4vw,54px);color:#f6eee7;text-decoration:none;font-size:14px}
 .cloud-back:hover{text-decoration:underline}
-.cloud-access{display:grid;align-content:center;justify-items:center;min-width:0;padding:40px 24px}
-.cloud-card{width:min(100%,440px);padding:clamp(24px,4vw,42px);background:#232421;border:1px solid #44443d;border-radius:18px;box-shadow:0 20px 50px #10100f65}
-#cloud-title{margin:0;color:#fff7ef;font-size:clamp(25px,3vw,34px);line-height:1.12;letter-spacing:-.035em}
-#cloud-message{margin:12px 0 25px;color:#d3c9c0;line-height:1.55}
+.cloud-access{width:min(100%,440px)}
+.cloud-card{padding:clamp(23px,4vw,34px);background:#211d20eb;border:1px solid #77525a;border-radius:18px;box-shadow:0 20px 50px #10080b65}
+#cloud-title{margin:0;color:#fff7ef;font-size:clamp(24px,3vw,30px);line-height:1.12;letter-spacing:-.035em;text-align:center}
+#cloud-message{margin:10px 0 22px;color:#d3c9c0;line-height:1.55;text-align:center}
 #cloud-login label:not(.cloud-show){display:block;margin:0 0 8px;color:#f2e8e0;font-size:14px;font-weight:700}
 #cloud-login input:not([type=checkbox]){width:100%;min-height:50px;padding:0 14px;background:#191a18;border:1px solid #605f55;border-radius:8px;color:#fff7ef;font-size:16px}
 #cloud-login input::placeholder{color:#aca49a}
@@ -47,12 +47,6 @@ aside{width:244px;background:#191919;box-shadow:none;padding:28px 18px}.brand{pa
 #cloud-login button:hover:enabled{background:#a11923}
 #cloud-login button:disabled{opacity:.68;cursor:wait}
 #cloud-panel :focus-visible{outline:2px solid #ff777e;outline-offset:3px}
-@media(max-width:740px){
- #cloud-panel{grid-template-columns:1fr;grid-template-rows:auto 1fr}
- .cloud-brand{gap:10px;padding:64px 20px 22px;border-right:0;border-bottom:1px solid #603436}
- .cloud-brand img{width:90px;padding:4px}
- .cloud-access{padding:26px 18px 36px;align-content:start}
-}
 @media print{#cloud-panel{display:none}}
 </style></head><body class="intro-visible"><section id="intro" class="als-intro" aria-labelledby="intro-title"><header class="intro-top"><a class="intro-wordmark" href="#" aria-label="ALS 4x4 · Apresentação"><img src="assets/logo.png" alt=""><span>ALS <b>4×4</b></span></a><span class="intro-top-label">MECÂNICA / PINTURA / PREPARAÇÃO</span></header><div class="intro-main"><div class="intro-copy"><span class="intro-kicker"><i></i> O SEU VEÍCULO. A NOSSA IDENTIDADE.</span><h1 id="intro-title" tabindex="-1">CUIDADO EM<br>CADA <em>DETALHE.</em></h1><p>Pintura automotiva, mecânica e preparação 4x4.<br>Conheça os serviços que dão vida aos projetos da ALS.</p><button class="intro-enter" type="button" onclick="enterWorkshop()"><span>Entrar</span><span aria-hidden="true">↗</span></button><span class="intro-entry-note">Acesse o painel da ALS 4x4</span></div><div class="intro-art"><div class="intro-orbit" aria-hidden="true"></div><div class="intro-orbit intro-orbit-two" aria-hidden="true"></div><span class="intro-art-label">ALS 4x4 / NOSSA MARCA</span><div class="intro-logo-disc"><img src="assets/logo.png" alt="Logo ALS 4x4 · Mecânica, pintura e preparação"></div><span class="intro-art-bottom">PERSONALIDADE EM CADA PROJETO.</span></div></div><div class="intro-services" aria-label="Serviços da ALS"><article><span>01 / PINTURA</span><h2>Pintura automotiva</h2><p>Cor e acabamento para transformar o visual do veículo.</p><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M3 4h12v6H3z M15 6h4v7H9v7 M7 20h4"/></svg></article><article><span>02 / MECÂNICA</span><h2>Mecânica</h2><p>Cuidado mecânico para os veículos que fazem parte da sua rotina.</p><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M14 3l-3 5 5 5 5-3a7 7 0 0 1-9 9l-5 3-4-4 5-5A7 7 0 0 1 14 3z"/></svg></article><article><span>03 / PREPARAÇÃO</span><h2>Preparação 4x4</h2><p>Projetos com a personalidade e a identidade do universo off-road.</p><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M2 16l5-8h10l5 8v3H2z M8 8l1-4h6l2 4 M6 16h2 M16 16h2 M5 19v3 M19 19v3"/></svg></article></div><footer class="intro-bottom"><span>ALS 4x4</span><span>MECÂNICA · PINTURA · PREPARAÇÃO</span><span>DA IDEIA AO ACABAMENTO.</span></footer></section><div class="layout cloud-locked"><aside><div class="brand"><img src="assets/logo.png" alt="ALS 4x4"><span>ALS 4x4<br><small style="font-size:11px;color:#bdb3af">Mecânica · Pintura · Preparação</small></span></div><nav id="nav"></nav><footer><span><i class="status-dot"></i> <span id="cloud-status" role="status">Armazenamento online</span></span></footer></aside><main><header><div><h1 id="title">Dashboard</h1><div class="muted" id="subtitle">Visão geral do negócio</div></div><div class="row"><button class="primary noprint" onclick="openModal('servico')">+ Novo serviço</button></div></header><section id="cloud-panel" aria-labelledby="cloud-title">
   <div class="cloud-brand">
